@@ -1,14 +1,50 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../core/extensions/context_extension.dart';
 import '../../shared/_constants.dart';
+import '../states/game_notifier.dart';
 
-class StartingGameView extends StatelessWidget {
+class StartingGameView extends StatefulWidget {
   const StartingGameView({super.key});
+
+  @override
+  State<StartingGameView> createState() => _StartingGameViewState();
+}
+
+class _StartingGameViewState extends State<StartingGameView> {
+  int _countdown = 3;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        if (_countdown == 0) {
+          GameNotifier().startGame();
+          timer.cancel();
+        } else {
+          setState(() => _countdown--);
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
+      onHover: (event) {
+        setState(() => _countdown = 3);
+      },
       child: Padding(
         padding: EdgeInsets.all(context.screenSize.shortestSide * 0.1),
         child: Column(
@@ -21,8 +57,8 @@ class StartingGameView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Spacing.vertLarge(),
-            const Text(
-              'Game will start in:\n3',
+            Text(
+              'Game will start in:\n$_countdown',
               style: AppTextStyles.semibold32,
               textAlign: TextAlign.center,
             ),
