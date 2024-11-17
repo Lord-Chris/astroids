@@ -3,11 +3,12 @@ import 'dart:ui';
 
 import '../core/extensions/_extensions.dart';
 import '../core/mixins/game_bounds_mixin.dart';
+import '../core/mixins/player_path_mixin.dart';
 import '../core/models/particle_model.dart';
 import '../core/models/player_model.dart';
 import '../shared/app_constants.dart';
 
-abstract class IGameService with GameBoundsMixin {
+abstract class IGameService with GameBoundsMixin, PlayerPathMixin {
   PlayerModel get player;
   set player(PlayerModel value);
 
@@ -25,7 +26,10 @@ class GameService extends IGameService {
   @override
   PlayerModel get player => _player;
   @override
-  set player(PlayerModel value) => _player = value;
+  set player(PlayerModel value) {
+    _player = value;
+    updatePath(value.position);
+  }
 
   final _particlesSC = StreamController<List<ParticleModel>>.broadcast();
   @override
@@ -79,6 +83,7 @@ class GameService extends IGameService {
   void resetGame() {
     particles.clear();
     _particlesSC.add(particles);
+    clearPath();
     _player = AppConstants.defaultPlayer;
   }
 }

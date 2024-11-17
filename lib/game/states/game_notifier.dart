@@ -49,7 +49,10 @@ class GameNotifier extends ValueNotifier<GameViewState> {
 
   void updatePlayerPosition(Offset localPosition) {
     _gameService.player = _gameService.player.copyWith(position: localPosition);
-    value = value.copyWith(player: _gameService.player);
+    value = value.copyWith(
+      player: _gameService.player,
+      playerDirection: _gameService.playerDirection,
+    );
   }
 
   void moveParticles() {

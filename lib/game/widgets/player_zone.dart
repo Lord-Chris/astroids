@@ -21,8 +21,13 @@ class PlayerZone extends StatelessWidget {
             children: [
               Positioned.fromRect(
                 rect: state.player.outerBounds,
-                child: CircleAvatar(
-                  backgroundColor: context.cScheme.onBackground,
+                child: Transform.rotate(
+                  angle: state.playerDirection,
+                  child: Icon(
+                    Icons.label,
+                    size: state.player.size,
+                    color: context.cScheme.onBackground,
+                  ),
                 ),
               ),
             ],

@@ -8,8 +8,7 @@ abstract class AppConstants {
   static const appName = 'Astroids';
   static const defaultPlayer = PlayerModel(
     position: Offset.zero,
-    size: 20,
-    velocity: Offset.zero,
+    size: 40,
   );
 
   static const particleCount = 10;

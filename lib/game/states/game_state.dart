@@ -42,6 +42,7 @@ class GameViewState {
   final GameState state;
   final PlayerModel player;
   final List<ParticleModel> particles;
+  final double playerDirection;
   final DateTime? startTime;
   final DateTime? endTime;
 
@@ -49,6 +50,7 @@ class GameViewState {
     this.state = GameState.starting,
     required this.player,
     this.particles = const [],
+    this.playerDirection = 0.0,
     this.startTime,
     this.endTime,
   });
@@ -57,6 +59,7 @@ class GameViewState {
     GameState? state,
     PlayerModel? player,
     List<ParticleModel>? particles,
+    double? playerDirection,
     ValueGetter<DateTime?>? startTime,
     ValueGetter<DateTime?>? endTime,
   }) {
@@ -64,6 +67,7 @@ class GameViewState {
       state: state ?? this.state,
       player: player ?? this.player,
       particles: particles ?? this.particles,
+      playerDirection: playerDirection ?? this.playerDirection,
       startTime: startTime != null ? startTime() : this.startTime,
       endTime: endTime != null ? endTime() : this.endTime,
     );
@@ -77,6 +81,7 @@ class GameViewState {
         other.state == state &&
         other.player == player &&
         listEquals(other.particles, particles) &&
+        other.playerDirection == playerDirection &&
         other.startTime == startTime &&
         other.endTime == endTime;
   }
@@ -86,6 +91,7 @@ class GameViewState {
     return state.hashCode ^
         player.hashCode ^
         particles.hashCode ^
+        playerDirection.hashCode ^
         startTime.hashCode ^
         endTime.hashCode;
   }
