@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../core/models/particle_model.dart';
 import '../../core/models/player_model.dart';
 
@@ -8,30 +10,62 @@ enum GameState {
   ended,
 }
 
+extension GameViewStateExtension on GameViewState {
+  Duration get gameDuration {
+    switch (state) {
+      case GameState.starting:
+      case GameState.paused:
+      case GameState.ended:
+        return (endTime ?? DateTime.now())
+            .difference(startTime ?? DateTime.now());
+      case GameState.playing:
+        return DateTime.now().difference(startTime ?? DateTime.now());
+    }
+  }
+
+  String get formattedDuration {
+    final duration = gameDuration;
+    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
+
+  String get formattedDurationMessage {
+    final duration = gameDuration;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+    return '$minutes minutes and $seconds seconds';
+  }
+}
+
 class GameViewState {
   final GameState state;
-  final Duration gameDuration;
   final PlayerModel player;
   final List<ParticleModel> particles;
+  final DateTime? startTime;
+  final DateTime? endTime;
 
   const GameViewState({
     this.state = GameState.starting,
-    this.gameDuration = const Duration(minutes: 5),
     required this.player,
     this.particles = const [],
+    this.startTime,
+    this.endTime,
   });
 
   GameViewState copyWith({
     GameState? state,
-    Duration? gameDuration,
     PlayerModel? player,
     List<ParticleModel>? particles,
+    ValueGetter<DateTime?>? startTime,
+    ValueGetter<DateTime?>? endTime,
   }) {
     return GameViewState(
       state: state ?? this.state,
-      gameDuration: gameDuration ?? this.gameDuration,
       player: player ?? this.player,
       particles: particles ?? this.particles,
+      startTime: startTime != null ? startTime() : this.startTime,
+      endTime: endTime != null ? endTime() : this.endTime,
     );
   }
 
@@ -41,15 +75,18 @@ class GameViewState {
 
     return other is GameViewState &&
         other.state == state &&
-        other.gameDuration == gameDuration &&
         other.player == player &&
-        other.particles == particles;
+        listEquals(other.particles, particles) &&
+        other.startTime == startTime &&
+        other.endTime == endTime;
   }
 
   @override
-  int get hashCode =>
-      state.hashCode ^
-      gameDuration.hashCode ^
-      player.hashCode ^
-      particles.hashCode;
+  int get hashCode {
+    return state.hashCode ^
+        player.hashCode ^
+        particles.hashCode ^
+        startTime.hashCode ^
+        endTime.hashCode;
+  }
 }

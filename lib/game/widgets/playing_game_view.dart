@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../shared/_constants.dart';
 import '../states/game_notifier.dart';
+import '../states/game_state.dart';
 import 'player_zone.dart';
 
 class PlayingGameView extends StatelessWidget {
@@ -26,7 +28,6 @@ class ParticlesZone extends StatelessWidget {
     final gameNotifier = GameNotifier();
     return ValueListenableBuilder(
       valueListenable: gameNotifier,
-      child: const CircleAvatar(backgroundColor: Colors.red),
       builder: (context, state, child) {
         return Stack(
           fit: StackFit.expand,
@@ -38,8 +39,16 @@ class ParticlesZone extends StatelessWidget {
                   width: state.particles[i].size,
                   height: state.particles[i].size,
                 ),
-                child: child!,
+                child: const CircleAvatar(backgroundColor: Colors.red),
               ),
+            Positioned(
+              top: 10,
+              left: 10,
+              child: Text(
+                'Timer: ${state.formattedDuration}',
+                style: AppTextStyles.medium24,
+              ),
+            ),
           ],
         );
       },

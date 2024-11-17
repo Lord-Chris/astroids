@@ -29,12 +29,18 @@ class GameNotifier extends ValueNotifier<GameViewState> {
   }
 
   void startGame() {
-    value = value.copyWith(state: GameState.playing);
     _gameService.createParticles();
+    value = value.copyWith(
+      state: GameState.playing,
+      startTime: () => DateTime.now(),
+      endTime: () => null,
+    );
+
     _timer = Timer.periodic(
       const Duration(milliseconds: 16),
       (_) => moveParticles(),
     );
+
     _particlesSS = _gameService.particlesStream.listen((event) {
       value = value.copyWith(particles: event);
       notifyListeners();
@@ -51,9 +57,12 @@ class GameNotifier extends ValueNotifier<GameViewState> {
   }
 
   void endGame() {
+    value = value.copyWith(
+      state: GameState.ended,
+      endTime: () => DateTime.now(),
+    );
     _timer?.cancel();
     _particlesSS?.cancel();
-    value = value.copyWith(state: GameState.ended);
     _gameService.resetGame();
   }
 
