@@ -20,4 +20,7 @@ abstract class AppConstants {
   static const minParticleSpeed = 1.0;
   static const maxParticleSpeed = 5.0;
   static const particleSpeedRange = maxParticleSpeed - minParticleSpeed;
+
+  static const bulletVelocity = 10.0;
+  static const bulletSize = 5.0;
 }

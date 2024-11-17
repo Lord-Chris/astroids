@@ -17,6 +17,10 @@ mixin PlayerPathMixin {
   }
 
   Offset get directionOffset {
+    if (_path.isEmpty) {
+      return Offset.zero;
+    }
+
     final first = _path.first;
     final last = _path.last;
 

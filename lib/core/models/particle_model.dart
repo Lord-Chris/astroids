@@ -51,6 +51,17 @@ class ParticleModel {
     );
   }
 
+  factory ParticleModel.bullet(Offset position, Offset velocity) {
+    return ParticleModel(
+      position: position,
+      size: AppConstants.bulletSize,
+      velocity: Offset.fromDirection(
+        velocity.direction,
+        AppConstants.bulletVelocity,
+      ),
+    );
+  }
+
   final Offset position;
   final Offset velocity;
   final double size;

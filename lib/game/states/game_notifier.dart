@@ -18,6 +18,7 @@ class GameNotifier extends ValueNotifier<GameViewState> {
 
   final IGameService _gameService;
   StreamSubscription<List<ParticleModel>>? _particlesSS;
+  StreamSubscription<List<ParticleModel>>? _bulletsSS;
   Timer? _timer;
 
   void updateScreenBounds(Size screenSize) {
@@ -38,11 +39,19 @@ class GameNotifier extends ValueNotifier<GameViewState> {
 
     _timer = Timer.periodic(
       const Duration(milliseconds: 16),
-      (_) => moveParticles(),
+      (_) {
+        moveParticles();
+        moveBullets();
+      },
     );
 
     _particlesSS = _gameService.particlesStream.listen((event) {
       value = value.copyWith(particles: event);
+      notifyListeners();
+    });
+
+    _bulletsSS = _gameService.bulletsStream.listen((event) {
+      value = value.copyWith(bullets: event);
       notifyListeners();
     });
   }
@@ -59,6 +68,14 @@ class GameNotifier extends ValueNotifier<GameViewState> {
     _gameService.moveParticles(endGame);
   }
 
+  void shootBullet() {
+    _gameService.createBullet();
+  }
+
+  void moveBullets() {
+    _gameService.moveBullets();
+  }
+
   void endGame() {
     value = value.copyWith(
       state: GameState.ended,
@@ -66,12 +83,14 @@ class GameNotifier extends ValueNotifier<GameViewState> {
     );
     _timer?.cancel();
     _particlesSS?.cancel();
+    _bulletsSS?.cancel();
     _gameService.resetGame();
   }
 
   @override
   void dispose() {
     _particlesSS?.cancel();
+    _bulletsSS?.cancel();
     super.dispose();
     _instance = null;
   }
