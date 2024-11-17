@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/extensions/_extensions.dart';
 import '../../shared/_constants.dart';
+import '../states/game_notifier.dart';
 
 class EndedGameView extends StatelessWidget {
   const EndedGameView({super.key});
@@ -27,7 +28,7 @@ class EndedGameView extends StatelessWidget {
             ),
             Spacing.vertLarge(),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: GameNotifier().initializeGame,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.blue,
                 foregroundColor: AppColors.white,

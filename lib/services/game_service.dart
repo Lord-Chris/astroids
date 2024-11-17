@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import '../core/extensions/_extensions.dart';
 import '../core/mixins/game_bounds_mixin.dart';
 import '../core/models/particle_model.dart';
 import '../core/models/player_model.dart';
@@ -14,7 +15,9 @@ abstract class IGameService with GameBoundsMixin {
 
   void createParticles();
 
-  void moveParticles();
+  void moveParticles(VoidCallback onCollision);
+
+  void resetGame();
 }
 
 class GameService extends IGameService {
@@ -32,14 +35,18 @@ class GameService extends IGameService {
 
   @override
   void createParticles() {
-    for (var i = 0; i < AppConstants.particleCount; i++) {
-      particles.add(ParticleModel.initial(screenSize));
+    while (particles.length < AppConstants.particleCount) {
+      final particle = ParticleModel.initial(screenSize);
+      if (particle.outerBounds.overlaps(player.outerBounds + 20)) {
+        continue;
+      }
+      particles.add(particle);
     }
     _particlesSC.add(particles);
   }
 
   @override
-  void moveParticles() {
+  void moveParticles(VoidCallback onCollision) {
     for (var i = 0; i < particles.length; i++) {
       ParticleModel particle = particles[i];
 
@@ -55,6 +62,23 @@ class GameService extends IGameService {
     }
     _particlesSC.add(particles);
 
-    // handleCollision();
+    checkForCollision(onCollision);
+  }
+
+  void checkForCollision(VoidCallback onCollision) {
+    for (var i = 0; i < particles.length; i++) {
+      final particle = particles[i];
+      if (particle.outerBounds.overlaps(player.outerBounds)) {
+        onCollision();
+        break;
+      }
+    }
+  }
+
+  @override
+  void resetGame() {
+    particles.clear();
+    _particlesSC.add(particles);
+    _player = AppConstants.defaultPlayer;
   }
 }

@@ -25,7 +25,7 @@ class PlayerModel {
 
   Rect get outerBounds => Rect.fromCenter(
         center: position,
-        width: size,
-        height: size,
+        width: size - 2,
+        height: size - 2,
       );
 }

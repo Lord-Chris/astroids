@@ -16,6 +16,7 @@ class StartingGameView extends StatefulWidget {
 class _StartingGameViewState extends State<StartingGameView> {
   int _countdown = 3;
   Timer? _timer;
+  final gameNotifier = GameNotifier();
 
   @override
   void initState() {
@@ -24,8 +25,8 @@ class _StartingGameViewState extends State<StartingGameView> {
       const Duration(seconds: 1),
       (timer) {
         if (_countdown == 0) {
-          GameNotifier().startGame();
           timer.cancel();
+          gameNotifier.startGame();
         } else {
           setState(() => _countdown--);
         }
@@ -44,6 +45,7 @@ class _StartingGameViewState extends State<StartingGameView> {
     return MouseRegion(
       onHover: (event) {
         setState(() => _countdown = 3);
+        gameNotifier.updatePlayerPosition(event.localPosition);
       },
       child: Padding(
         padding: EdgeInsets.all(context.screenSize.shortestSide * 0.1),

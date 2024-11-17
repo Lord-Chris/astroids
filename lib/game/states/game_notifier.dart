@@ -24,6 +24,10 @@ class GameNotifier extends ValueNotifier<GameViewState> {
     _gameService.updateGameBounds(screenSize);
   }
 
+  void initializeGame() {
+    value = value.copyWith(state: GameState.starting);
+  }
+
   void startGame() {
     value = value.copyWith(state: GameState.playing);
     _gameService.createParticles();
@@ -43,13 +47,14 @@ class GameNotifier extends ValueNotifier<GameViewState> {
   }
 
   void moveParticles() {
-    _gameService.moveParticles();
+    _gameService.moveParticles(endGame);
   }
 
   void endGame() {
     _timer?.cancel();
     _particlesSS?.cancel();
     value = value.copyWith(state: GameState.ended);
+    _gameService.resetGame();
   }
 
   @override

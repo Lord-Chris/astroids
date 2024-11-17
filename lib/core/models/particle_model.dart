@@ -41,7 +41,11 @@ class ParticleModel {
         screenSize.width * random.nextDouble(),
         screenSize.height * random.nextDouble(),
       ),
-      velocity: Offset.fromDirection(random.nextDouble() * 3 * pi),
+      velocity: Offset.fromDirection(
+        random.nextDouble(),
+        AppConstants.minParticleSpeed +
+            random.nextInt(AppConstants.particleSpeedRange.toInt()),
+      ),
       size: AppConstants.minParticleSize +
           random.nextInt(AppConstants.particleSizeRange.toInt()),
     );
@@ -65,8 +69,8 @@ class ParticleModel {
 
   Rect get outerBounds => Rect.fromCenter(
         center: position,
-        width: size,
-        height: size,
+        width: size - 2,
+        height: size - 2,
       );
 
   @override
