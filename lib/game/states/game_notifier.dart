@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import '../../core/models/particle_model.dart';
 import '../../services/game_service.dart';
 import 'game_state.dart';
 
@@ -14,9 +17,24 @@ class GameNotifier extends ValueNotifier<GameViewState> {
       : super(GameViewState(player: _gameService.player));
 
   final IGameService _gameService;
+  StreamSubscription<List<ParticleModel>>? _particlesSS;
+  Timer? _timer;
+
+  void updateScreenBounds(Size screenSize) {
+    _gameService.updateGameBounds(screenSize);
+  }
 
   void startGame() {
     value = value.copyWith(state: GameState.playing);
+    _gameService.createParticles();
+    _timer = Timer.periodic(
+      const Duration(milliseconds: 16),
+      (_) => moveParticles(),
+    );
+    _particlesSS = _gameService.particlesStream.listen((event) {
+      value = value.copyWith(particles: event);
+      notifyListeners();
+    });
   }
 
   void updatePlayerPosition(Offset localPosition) {
@@ -24,8 +42,19 @@ class GameNotifier extends ValueNotifier<GameViewState> {
     value = value.copyWith(player: _gameService.player);
   }
 
+  void moveParticles() {
+    _gameService.moveParticles();
+  }
+
+  void endGame() {
+    _timer?.cancel();
+    _particlesSS?.cancel();
+    value = value.copyWith(state: GameState.ended);
+  }
+
   @override
   void dispose() {
+    _particlesSS?.cancel();
     super.dispose();
     _instance = null;
   }

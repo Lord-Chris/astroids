@@ -41,7 +41,8 @@ class GameView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: GameNotifier(),
+      valueListenable: GameNotifier()
+        ..updateScreenBounds(MediaQuery.of(context).size),
       builder: (context, state, _) {
         return Scaffold(
           backgroundColor: AppColors.black,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/app_colors.dart';
 import '../states/game_notifier.dart';
+import 'player_zone.dart';
 
 class PlayingGameView extends StatelessWidget {
   const PlayingGameView({super.key});
@@ -11,34 +11,36 @@ class PlayingGameView extends StatelessWidget {
     return const Stack(
       fit: StackFit.expand,
       children: [
-        Positioned.fill(child: MouseMovementWidget()),
+        Positioned.fill(child: ParticlesZone()),
+        Positioned.fill(child: PlayerZone()),
       ],
     );
   }
 }
 
-class MouseMovementWidget extends StatelessWidget {
-  const MouseMovementWidget({super.key});
+class ParticlesZone extends StatelessWidget {
+  const ParticlesZone({super.key});
 
   @override
   Widget build(BuildContext context) {
     final gameNotifier = GameNotifier();
     return ValueListenableBuilder(
       valueListenable: gameNotifier,
-      builder: (context, state, _) {
-        return MouseRegion(
-          onHover: (event) {
-            gameNotifier.updatePlayerPosition(event.localPosition);
-          },
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
+      child: const CircleAvatar(backgroundColor: Colors.red),
+      builder: (context, state, child) {
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            for (var i = 0; i < state.particles.length; i++)
               Positioned.fromRect(
-                rect: state.player.outerBounds,
-                child: const CircleAvatar(backgroundColor: AppColors.white),
+                rect: Rect.fromCenter(
+                  center: state.particles[i].position,
+                  width: state.particles[i].size,
+                  height: state.particles[i].size,
+                ),
+                child: child!,
               ),
-            ],
-          ),
+          ],
         );
       },
     );
