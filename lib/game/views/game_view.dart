@@ -4,6 +4,7 @@ import '../../shared/app_colors.dart';
 import '../states/game_notifier.dart';
 import '../states/game_state.dart';
 import '../widgets/ended_game_view.dart';
+import '../widgets/playing_game_view.dart';
 import '../widgets/starting_game_view.dart';
 
 class GamePage extends StatefulWidget {
@@ -41,10 +42,13 @@ class GameView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: GameNotifier(),
-      builder: (context, state, child) {
+      builder: (context, state, _) {
         return Scaffold(
           backgroundColor: AppColors.black,
           body: Builder(builder: (context) {
+            if (state.state == GameState.playing) {
+              return const PlayingGameView();
+            }
             if (state.state == GameState.starting) {
               return const StartingGameView();
             }
