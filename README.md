@@ -4,7 +4,11 @@ Astroids is a replica of "Astroids: The arcade game". The game involves the play
 
 This is a test for Tutero.
 
+## Video Demo
+
 ![Asteriods](videos/demo.mov)
+
+https://github.com/user-attachments/assets/f22d6b13-8431-42bd-9944-24c8288cd5f9
 
 ## Features
 
