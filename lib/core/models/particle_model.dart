@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import '../../shared/_constants.dart';
+import '../utils/polygon_util.dart';
 
 extension PMExt on ParticleModel {
   Rect get outerBounds => Rect.fromCenter(
@@ -38,22 +39,43 @@ class ParticleModel {
     required this.position,
     required this.velocity,
     required this.size,
+    this.vertices = const [],
   });
 
   factory ParticleModel.initial(Size screenSize) {
     final random = Random();
+    List<Offset> points = [];
+    final size = AppConstants.minParticleSize +
+        random.nextInt(AppConstants.particleSizeRange.toInt());
+
+    final position = Offset(
+      screenSize.width * random.nextDouble(),
+      screenSize.height * random.nextDouble(),
+    );
+
+    if (AppConstants.supportPolygons) {
+      final sides = random.nextInt(5) + 2;
+
+      for (int i = 0; i < sides; i++) {
+        points.add(
+          PolygonUtil.createVertex(
+            Offset(size / 2, size / 2),
+            size / 2,
+            (360 / sides * i) + random.nextInt(100),
+          ),
+        );
+      }
+    }
+
     return ParticleModel(
-      position: Offset(
-        screenSize.width * random.nextDouble(),
-        screenSize.height * random.nextDouble(),
-      ),
+      position: position,
       velocity: Offset.fromDirection(
         random.nextDouble(),
         AppConstants.minParticleSpeed +
             random.nextInt(AppConstants.particleSpeedRange.toInt()),
       ),
-      size: AppConstants.minParticleSize +
-          random.nextInt(AppConstants.particleSizeRange.toInt()),
+      size: size,
+      vertices: points,
     );
   }
 
@@ -71,6 +93,7 @@ class ParticleModel {
   final Offset position;
   final Offset velocity;
   final double size;
+  final List<Offset> vertices;
 
   ParticleModel copyWith({
     Offset? position,
@@ -81,6 +104,7 @@ class ParticleModel {
       position: position ?? this.position,
       velocity: velocity ?? this.velocity,
       size: size ?? this.size,
+      vertices: vertices,
     );
   }
 

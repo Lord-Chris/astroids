@@ -6,6 +6,7 @@ abstract class AppConstants {
   AppConstants._();
 
   static const appName = 'Astroids';
+  static const supportPolygons = true;
   static const defaultPlayer = PlayerModel(
     position: Offset.zero,
     size: 40,

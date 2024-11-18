@@ -91,6 +91,7 @@ class GameNotifier extends ValueNotifier<GameViewState> {
   void dispose() {
     _particlesSS?.cancel();
     _bulletsSS?.cancel();
+    _timer?.cancel();
     super.dispose();
     _instance = null;
   }
