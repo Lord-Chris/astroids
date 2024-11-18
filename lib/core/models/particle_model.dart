@@ -4,6 +4,12 @@ import 'dart:ui';
 import '../../shared/_constants.dart';
 
 extension PMExt on ParticleModel {
+  Rect get outerBounds => Rect.fromCenter(
+        center: position,
+        width: size - 2,
+        height: size - 2,
+      );
+
   bool isWithinBounds(Size bounds) {
     return position.dx >= 0 &&
         position.dx <= bounds.width &&
@@ -77,12 +83,6 @@ class ParticleModel {
       size: size ?? this.size,
     );
   }
-
-  Rect get outerBounds => Rect.fromCenter(
-        center: position,
-        width: size - 2,
-        height: size - 2,
-      );
 
   @override
   bool operator ==(Object other) {

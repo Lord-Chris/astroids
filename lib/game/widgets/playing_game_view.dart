@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/extensions/_extensions.dart';
 import '../../shared/_constants.dart';
 import '../states/game_notifier.dart';
 import '../states/game_state.dart';
@@ -40,6 +41,17 @@ class ParticlesZone extends StatelessWidget {
                   height: state.particles[i].size,
                 ),
                 child: const CircleAvatar(backgroundColor: Colors.red),
+              ),
+            for (var i = 0; i < state.bullets.length; i++)
+              Positioned.fromRect(
+                rect: Rect.fromCenter(
+                  center: state.bullets[i].position,
+                  width: state.bullets[i].size,
+                  height: state.bullets[i].size,
+                ),
+                child: CircleAvatar(
+                  backgroundColor: context.cScheme.onBackground,
+                ),
               ),
             Positioned(
               top: 10,

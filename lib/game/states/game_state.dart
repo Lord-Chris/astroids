@@ -34,7 +34,7 @@ extension GameViewStateExtension on GameViewState {
     final duration = gameDuration;
     final minutes = duration.inMinutes.remainder(60);
     final seconds = duration.inSeconds.remainder(60);
-    return '$minutes minutes and $seconds seconds';
+    return '$minutes minute(s) and $seconds second(s)';
   }
 }
 
@@ -83,7 +83,6 @@ class GameViewState {
 
     return other is GameViewState &&
         other.state == state &&
-        other.player == player &&
         listEquals(other.particles, particles) &&
         listEquals(other.bullets, bullets) &&
         other.playerDirection == playerDirection &&
@@ -94,7 +93,6 @@ class GameViewState {
   @override
   int get hashCode {
     return state.hashCode ^
-        player.hashCode ^
         particles.hashCode ^
         bullets.hashCode ^
         playerDirection.hashCode ^
